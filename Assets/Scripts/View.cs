@@ -73,7 +73,6 @@ public class View : MonoBehaviour
 
     public void ActivateEndGamePanel(string message)
     {
-        Debug.Log("Activating EndGame Panel");
         inGameCanvas.SetActive(false);
         endgameCanvas.SetActive(true);
         endgameText.text = message;
