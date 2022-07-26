@@ -7,9 +7,8 @@ namespace Tiles
     {
         public event Action OnIngotClick;
 
-        void OnMouseDown(){
+        private void OnMouseDown(){
             OnIngotClick?.Invoke();
-            gameObject.SetActive(false);
         }
     }
 }

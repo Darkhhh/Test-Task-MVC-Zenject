@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Tiles;
 using UnityEngine;
@@ -29,8 +28,8 @@ public class View : MonoBehaviour
 
     #region Events
 
-    public event Action OnTileDigged;
-    public event Action OnGoldGrabbed;
+    public event Action<int> OnTileClicked;
+    public event Action<int> OnGoldClicked;
     public event Action OnRestartButtonClicked;
 
     #endregion
@@ -78,6 +77,16 @@ public class View : MonoBehaviour
         endgameText.text = message;
     }
 
+    public void SetActiveGoldIngotOnTile(int tileIndex, bool active)
+    {
+        _tiles[tileIndex].SetIngotActive(active);
+    }
+
+    public void DigTile(int tileIndex, float opacity)
+    {
+        _tiles[tileIndex].SetOpacity(opacity);
+    }
+
     #endregion
 
 
@@ -88,15 +97,24 @@ public class View : MonoBehaviour
         OnRestartButtonClicked?.Invoke();
     }
 
-    private void HandleTileClickEvent(TileScript.TileEvent tileEvent)
+    private void HandleTileClickEvent(TileScript.TileEvent tileEvent, TileScript tile)
     {
+        var tileIndex = -1;
+        for (var i = 0; i < _tiles.Count; i++)
+        {
+            if (!ReferenceEquals(tile, _tiles[i])) continue;
+            tileIndex = i;
+            break;
+        }
+
+        if (tileIndex == -1) throw new Exception("TASK: Couldn't find tile");
         switch (tileEvent)
         {
             case TileScript.TileEvent.IncreaseGold:
-                OnGoldGrabbed?.Invoke();
+                OnGoldClicked?.Invoke(tileIndex);
                 break;
             case TileScript.TileEvent.DecreaseShovel:
-                OnTileDigged?.Invoke();
+                OnTileClicked?.Invoke(tileIndex);
                 break;
         }
     }

@@ -993,7 +993,6 @@ GameObject:
   - component: {fileID: 1156949856}
   - component: {fileID: 1156949857}
   - component: {fileID: 1156949858}
-  - component: {fileID: 1156949859}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -1030,7 +1029,6 @@ MonoBehaviour:
   _scriptableObjectInstallers: []
   _monoInstallers:
   - {fileID: 1156949858}
-  - {fileID: 1156949859}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -1061,23 +1059,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 707331537}
+  tilePrefab: {fileID: 2743971602205717248, guid: 911f3f89079a7334582609b090853f55, type: 3}
+  tilesParentObject: {fileID: 1807996099}
   winGoldNumber: 2
   defaultShovelsNumber: 10
---- !u!114 &1156949859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1156949855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f593a41bbd736546984346c4329a45c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 2743971602205717248, guid: 911f3f89079a7334582609b090853f55, type: 3}
-  parentObject: {fileID: 1807996099}
-  tilesInRow: 10
+  tilesInRow: 5
+  goldProbability: 0.747
+  defaultDepth: 5
 --- !u!1 &1618181522
 GameObject:
   m_ObjectHideFlags: 0

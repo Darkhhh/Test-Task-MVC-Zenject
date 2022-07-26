@@ -1,63 +1,53 @@
 using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Tiles
 {
     public class TileScript : MonoBehaviour
     {
         #region Enum
-
+     
         public enum TileEvent
         {
             DecreaseShovel, IncreaseGold
         }
-
+     
         #endregion
-        
-        
-        #region Serialize Fields
 
-        [SerializeField] private int defaultDepth;
-        [Range(0f,1f)] public float goldProbability;
+        #region Serialized Fields
+
         [SerializeField] private GameObject goldIngot;
 
         #endregion
 
+        #region Events
+
+        public event Action<TileEvent, TileScript> OnTileClick;
+
+        #endregion
 
         #region Private Values
 
-        private int _localDepth;
-        private int _goldLevel;
-        private bool _isIngotActive;
         private SpriteRenderer _spriteRenderer;
+        private IngotScript _ingotScript;
 
         #endregion
 
-
-        #region Public Values
-
-        public event Action<TileEvent> OnTileClick; 
-
-        #endregion
 
         
         #region Event Functions
 
-        void Start()
+        private void Start()
         {
             _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-            if(defaultDepth < 1) Debug.LogError("Incorrect value for default depth");
-            _localDepth = defaultDepth;
-            _goldLevel = -1;
-            _isIngotActive = false;
-            goldIngot.SetActive(false);
-            SolveGoldCondition();
+            _ingotScript = goldIngot.GetComponent<IngotScript>();
+            _ingotScript.OnIngotClick += HandleIngotClick;
+            SetIngotActive(false);
         }
-        
-        void OnMouseDown()
+
+        private void OnMouseDown()
         {
-            if(_localDepth > 0 && !_isIngotActive) Digging();
+            OnTileClick?.Invoke(TileEvent.DecreaseShovel, this);
         }
 
         #endregion
@@ -65,35 +55,26 @@ namespace Tiles
 
         #region Private Methods
 
-        private void SolveGoldCondition(){
-            if(Random.Range(0f,1f) < goldProbability)
-                _goldLevel = Random.Range(1, defaultDepth);
+        private void HandleIngotClick()
+        {
+            OnTileClick?.Invoke(TileEvent.IncreaseGold, this);
         }
-        
-        private void Digging(){
-            _localDepth--;
-            SetOpacity((float)_localDepth/defaultDepth);
-            if(_localDepth == _goldLevel) SetGold(true);
-            OnTileClick?.Invoke(TileEvent.DecreaseShovel);
-        }
-        
-        private void SetOpacity(float value)
+
+        #endregion
+
+
+        #region Public Methods
+
+        public void SetOpacity(float value)
         {
             var color = _spriteRenderer.color;
             color = new Color(color.a, color.g, color.b, value);
             _spriteRenderer.color = color;
         }
-        
-        private void SetGold(bool value){
-            goldIngot.SetActive(value);
-            _isIngotActive = true;
-            goldIngot.GetComponent<IngotScript>().OnIngotClick += IncreaseGoldAmount;
-        }
-        
-        private void IncreaseGoldAmount()
+
+        public void SetIngotActive(bool value)
         {
-            _isIngotActive = false;
-            OnTileClick?.Invoke(TileEvent.IncreaseGold);
+            goldIngot.SetActive(value);
         }
 
         #endregion
